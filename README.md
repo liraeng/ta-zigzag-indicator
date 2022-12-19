@@ -20,4 +20,4 @@ Basic usage:
 It returns the pivot coordinates (x-axis and y-axis) as well as the ROI of the theorical trades in this calculated period, which a effective parameter for ML optimization and even heuristic processing.
 
 ## @liraeng
-## Open to colaboration on forward thinking ideias and projects (trading, forex, crypto) #datascience
+# Open to colaboration on forward thinking ideias and projects (trading, forex, crypto) #datascience
