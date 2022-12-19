@@ -8,14 +8,29 @@ Simple ZigZag calculation as a function.
 Includes a hyperparameters optimization for the best calculation.
 Created based on the ZigZag classical definition with depth and deviation.
 
-Use for free, just give the credits.
+Use for free, just give the credits. MIT License.
 """
-
 import pandas as pd
 from scipy.signal import find_peaks
 
 
-def zigzag(_ohlc_df: pd.DataFrame, _depth, _deviation):
+def zigzag(_ohlc_df: pd.DataFrame, _depth: int, _deviation: float) -> (list, list, float):
+    """
+    Basic implementation of ZigZag indicator for pd.DataFrame python processing.
+    
+    :type _ohlc_df: pd.Dataframe
+    :param _ohlc_df: dataset with olhc data of the timeseries
+    :type _depth: int
+    :param _depth: the usual "lenght" or "number of legs" param, it defines the mean desired number of candles in the trends
+    :type _deviation: float
+    :param _deviation: the price deviation for reversals (e.g. 5.0, default)
+    
+    :return filtered_pivot_indexes: time index for the calculated pivot points (x value)
+    :return filtered_pivot_values: respective calulated values (y value)
+    :return _roi_calculations: estimation of the total theorical profit for theorical trades using the calculated pivots
+    """
+    
+    # dataset split into lists
     _high_data = _ohlc_df['high']
     _high_data_list = _high_data.tolist()
     _low_data = _ohlc_df['low']
@@ -34,6 +49,7 @@ def zigzag(_ohlc_df: pd.DataFrame, _depth, _deviation):
     filtered_pivot_indexes = []
     filtered_pivot_values = []
     
+    # appeding pivots and sorting (time index)
     _all_indexes = _high_indices.tolist() + _low_indices.tolist()
     _all_indexes = sorted(_all_indexes)
     
@@ -123,7 +139,6 @@ def zigzag(_ohlc_df: pd.DataFrame, _depth, _deviation):
     
     # filtering by the minimal deviation criteria
     for _index in range(len(filtered_pivot_values) - 1, 1, -1):
-        
         try:
             _first_value = filtered_pivot_values[_index]
             _second_value = filtered_pivot_values[_index - 1]
@@ -140,6 +155,8 @@ def zigzag(_ohlc_df: pd.DataFrame, _depth, _deviation):
             del filtered_pivot_indexes[_index]
             del filtered_pivot_indexes[_index - 1]
     
+    # calculation of the ROI (return over investiment) parameter
+    # it calculates profit for theorical buy and sell in the calculated period
     _roi_calculations = []
     for _index in range(1, len(filtered_pivot_values) - 1):
         _first_value = filtered_pivot_values[_index - 1]
