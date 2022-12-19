@@ -151,9 +151,12 @@ def zigzag(_ohlc_df: pd.DataFrame, _depth: int, _deviation: float) -> (list, lis
         # case for not reaching the minimal deviation
         if _variation < _minimal_deviation:
             del filtered_pivot_values[_index]
-            del filtered_pivot_values[_index - 1]
             del filtered_pivot_indexes[_index]
-            del filtered_pivot_indexes[_index - 1]
+            
+            # alteration to keep the last pivot point
+            if _index != len(filtered_pivot_values) - 1:
+                del filtered_pivot_values[_index - 1]
+                del filtered_pivot_indexes[_index - 1]
     
     # calculation of the ROI (return over investiment) parameter
     # it calculates profit for theorical buy and sell in the calculated period
